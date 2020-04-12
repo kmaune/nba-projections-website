@@ -4,6 +4,8 @@ from csv import writer
 from itertools import zip_longest
 
 BASE_URL = "https://www.basketball-reference.com"
+BASE_TEAMS = ['ATL', 'BOS', 'BRK', 'CHO', 'CHI', 'CLE', 'DAL', 'DEN', 'DET', 'GSW', 'HOU', 'IND', 'LAC', 'LAL', 'MEM', 'MIA', 'MIL', 'MIN', 'NOP', 'NYK', 'OKC', 'ORL', 
+'PHI', 'PHO', 'POR', 'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
 
 def get_per_game_stats(season="2018-2019"):
 	season_end_year = season.split("-")[1]
@@ -249,7 +251,33 @@ def get_nba_drafts(year='2018'):
 
 	return 
 
+def get_individual_rosters(teams=BASE_TEAMS):
+	for team in teams:
+		link_head = 'https://www.basketball-reference.com/teams/'
+		link_end = '/2020.html'
+		link = link_head + team + link_end
+		#print(link)
 
+		response = requests.get(link)
+
+		soup = BeautifulSoup(response.text, 'html.parser')
+
+		players = soup.find_all(attrs={"data-stat": "player"})
+		positions = soup.find_all(attrs={"data-stat": "pos"})
+		years_experience = soup.find_all(attrs={"data-stat": "years_experience"})
+
+		folders = 'data/rosters/'
+		filetype = '.csv'
+		filepath = folders+team+filetype
+		with open(filepath, 'w') as csv_file:
+			csv_writer = writer(csv_file)
+			headers = ['Player', 'Position', 'Experience']
+			csv_writer.writerow(headers)
+			for player, position, experience in zip_longest(players, positions, years_experience):
+				if player.text == "Player":
+					continue
+				csv_writer.writerow([player.text, position.text, experience.text])
+	return
 
 
 
