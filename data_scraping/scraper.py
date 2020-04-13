@@ -2,12 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 from csv import writer
 from itertools import zip_longest
+from data_scraping.helper import *
 
-BASE_URL = "https://www.basketball-reference.com"
-BASE_TEAMS = ['ATL', 'BOS', 'BRK', 'CHO', 'CHI', 'CLE', 'DAL', 'DEN', 'DET', 'GSW', 'HOU', 'IND', 'LAC', 'LAL', 'MEM', 'MIA', 'MIL', 'MIN', 'NOP', 'NYK', 'OKC', 'ORL', 
-'PHI', 'PHO', 'POR', 'SAC', 'SAS', 'TOR', 'UTA', 'WAS']
-
-def get_per_game_stats(season="2018-2019"):
+def get_per_game_stats(app, mysql, season="2018-2019"):
 	season_end_year = season.split("-")[1]
 
 	url = "{BASE_URL}/leagues/NBA_{season_end_year}_per_game.html".format(
@@ -42,18 +39,8 @@ def get_per_game_stats(season="2018-2019"):
 	turnovers = soup.find_all(attrs={"data-stat": "tov_per_g"})
 	personal_fouls = soup.find_all(attrs={"data-stat": "pf_per_g"})
 
-	filepath = 'data/player_stats/{season}_per_game.csv'.format(
-			season=season
-		)
-
-	with open(filepath, 'w') as csv_file:
-		csv_writer = writer(csv_file)
-		headers = ['Player', 'Team', 'GP', 'GS', 'MPG', 'PTS', 'AST', 
-				   'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'eFG%', 'FT',
-				   'FTA','FT%', 'ORB', 'DRB', 'STL', 'BLK', 'TOV', 'PF']
-
-		csv_writer.writerow(headers)
-
+	with app.app_context():
+		cursor = mysql.connection.cursor()
 		for (player, tm, g, gs, mpg, pts, ast, fg, fga, fgp, 
 			tp, tpa, tpp, efg, ft, fta, ftp, orb, drb, stl, 
 			blk, tov, pf) in zip_longest(players, teams, games, 
@@ -62,18 +49,33 @@ def get_per_game_stats(season="2018-2019"):
 			eFG_pct, free_throws, ft_attemps, ft_pct, offensive_rebounds,
 			defensive_rebounds, steals, blocks, turnovers, personal_fouls):
 
-			if player.text == 'Player':
+			if player.text == "Player":
 				continue
 
-			csv_writer.writerow([player.text, tm.text, g.text, gs.text, 
-				mpg.text, pts.text, ast.text, fg.text, fga.text, fgp.text,
-				tp.text, tpa.text, tpp.text, efg.text, ft.text, fta.text,
-				ftp.text, orb.text, drb.text, stl.text, blk.text, tov.text,
-				pf.text])
+			tppVal = check_empty(tpp.text)
+			fgpVal = check_empty(fgp.text)
+			ftpVal = check_empty(ftp.text)
+			efgVal = check_empty(efg.text)
+			playerName = player.text
+			playerName = playerName.replace("'", "")
+			params = [playerName, tm.text, season, int(g.text),int(gs.text),
+					  float(mpg.text), float(pts.text), float(ast.text), 
+					  float(fg.text), float(fga.text), float(fgpVal), 
+					  float(tp.text), float(tpa.text), float(tppVal), 
+					  float(efgVal), float(ft.text), float(fta.text), 
+					  float(ftpVal), float(orb.text), float(drb.text), 
+					  float(stl.text), float(blk.text), float(tov.text),
+					  float(pf.text)]
+			insert_perGame = create_sql_perGame(params)
+			cursor.execute(insert_perGame)
+		mysql.connection.commit()
+
+
+
 
 	return
 
-def get_advanced_stats(season="2018-2019"):
+def get_advanced_stats(app, mysql, season="2018-2019"):
 	season_end_year = season.split("-")[1]
 
 	url = "{BASE_URL}/leagues/NBA_{season_end_year}_advanced.html".format(
@@ -111,20 +113,8 @@ def get_advanced_stats(season="2018-2019"):
 	vorps = soup.find_all(attrs={"data-stat": "vorp"})
 
 
-	filepath = 'data/player_stats/{season}_advanced.csv'.format(
-			season=season
-		)
-
-	with open(filepath, 'w') as csv_file:
-		csv_writer = writer(csv_file)
-
-		headers = ['Player', 'Team', 'GP', 'MP', 'PER', 'TS%', 
-					'3PAr', 'FTr', 'ORB%','DRB%', 'TRB%', 'AST%', 
-					'STL%', 'BLK%', 'TOV%', 'USG%', 'OWS', 'DWS', 
-					'WS', 'WS/48', 'OBPM', 'DBPM', 'BPM', 'VORP']
-
-		csv_writer.writerow(headers)
-
+	with app.app_context():
+		cursor = mysql.connection.cursor()
 		for (player, tm, g, mp, per, ts, tpar, ftr, orb, drb, trb, 
 			ast, stl, blk, tov, usg, ows, dws, ws, ws_per, obpm,
 			dbpm, bpm, vorp) in zip_longest(players, teams, games, 
@@ -133,20 +123,31 @@ def get_advanced_stats(season="2018-2019"):
 			usg_pct, offensive_winshares, defensive_winshares, 
 			winshares, winshares_per48, obpms, dbpms, bpms, vorps):
 
-
 			if player.text == 'Player':
 				continue
+			if any_empty([mp.text, per.text, ts.text, tpar.text, ftr.text, orb.text, usg.text, ws.text]):
+				continue
+			playerName = player.text
+			playerName = playerName.replace("'", "")
+			params = [playerName, tm.text, season, int(g.text), int(mp.text),
+					  float(per.text), float(ts.text), float(tpar.text), 
+					  float(ftr.text), float(orb.text), float(drb.text), 
+					  float(trb.text), float(ast.text), float(stl.text), 
+					  float(blk.text), float(tov.text), float(usg.text), 
+					  float(ows.text), float(dws.text), float(ws.text),
+					  float(ws_per.text), float(obpm.text), float(dbpm.text),
+					  float(bpm.text), float(vorp.text)]
+			insert_advanced = create_sql_advanced(params)
+			cursor.execute(insert_advanced)
 
-			csv_writer.writerow([player.text, tm.text, g.text, mp.text,
-				per.text, ts.text, tpar.text, ftr.text, orb.text, 
-				drb.text, trb.text, ast.text, stl.text, blk.text, tov.text, 
-				usg.text, ows.text, dws.text, ws.text, ws_per.text, 
-				obpm.text, dbpm.text, bpm.text, vorp.text])
+		mysql.connection.commit()
+
+
 
 		return
 
 
-def get_per_100_stats(season="2018-2019"):
+def get_per_100_stats(app, mysql, season="2018-2019"):
 	pass
 	season_end_year = season.split("-")[1]
 
@@ -182,19 +183,8 @@ def get_per_100_stats(season="2018-2019"):
 	ortgs = soup.find_all(attrs={"data-stat": "off_rtg"})
 	drtgs = soup.find_all(attrs={"data-stat": "def_rtg"})
 
-	filepath = 'data/player_stats/{season}_per100.csv'.format(
-			season=season
-		)
-
-	with open(filepath, 'w') as csv_file:
-		csv_writer = writer(csv_file)
-
-		headers = ['Player', 'Team', 'GP', 'MP', 'PTS', 'AST', 
-				   'FG', 'FGA', 'FG%', '3P', '3PA', '3P%', 'FT', 'FTA',
-				   'FT%', 'ORB', 'DRB', 'STL', 'BLK', 'TOV', 'PF', 'ORtg', 'DRtg']
-
-		csv_writer.writerow(headers)
-
+	with app.app_context():
+		cursor = mysql.connection.cursor()
 		for (player, tm, g, mp, pts, ast, fg, fga, fgp, 
 			tp, tpa, tpp, ft, fta, ftp, orb, drb, stl, 
 			blk, tov, pf, ortg, drtg) in zip_longest(players,
@@ -204,20 +194,31 @@ def get_per_100_stats(season="2018-2019"):
 			defensive_rebounds, steals, blocks, turnovers, 
 			personal_fouls, ortgs, drtgs):
 
+			tppVal = check_empty(tpp.text)
+			ftpVal = check_empty(ftp.text)
+			fgpVal = check_empty(fgp.text)
 			if player.text == 'Player':
 				continue
+			if any_empty([ortg.text, drtg.text]):
+				continue
+			playerName = player.text
+			playerName = playerName.replace("'", "")
+			params = [playerName, tm.text, season, int(g.text), int(mp.text), 
+					  float(pts.text), float(ast.text), float(fg.text), 
+					  float(fga.text), float(fgpVal), float(tp.text), 
+					  float(tpa.text), float(tppVal), float(ft.text),
+					  float(fta.text), float(ftpVal), float(orb.text), 
+					  float(drb.text), float(stl.text), float(blk.text), 
+					  float(tov.text), float(pf.text), int(ortg.text), int(drtg.text)]
+			insert_per100 = create_sql_per100(params)
+			cursor.execute(insert_per100)
 
-			csv_writer.writerow([player.text, tm.text, g.text, mp.text,
-				pts.text, ast.text, fg.text, fga.text, fgp.text, 
-				tp.text, tpa.text, tpp.text, ft.text, fta.text, 
-				ftp.text, orb.text, drb.text, stl.text, blk.text, 
-				tov.text, pf.text, ortg.text, drtg.text])	
-
+		mysql.connection.commit()
 
 	return
 
 
-def get_nba_drafts(year='2018'):
+def get_nba_drafts(app, mysql, year='2018'):
 	url = "{BASE_URL}/draft/NBA_{year}.html".format(
 			BASE_URL = BASE_URL,
 			year = year
@@ -232,51 +233,50 @@ def get_nba_drafts(year='2018'):
 	players = soup.find_all(attrs={'data-stat': 'player'})
 	years = soup.find_all(attrs={'data-stat': 'seasons'})
 
-	filepath = 'data/drafts/{year}_draft.csv'.format(
-		year = year
-	)
-
-	with open(filepath, 'w') as csv_file:
-		csv_writer = writer(csv_file)
-		headers = ['Pick Number', 'Team', 'Player', 'NBA Seasons']
-
-		csv_writer.writerow(headers)
-
+	with app.app_context():
+		cursor = mysql.connection.cursor()
 		for pick, team, player, experience in zip_longest(picks, teams, players, years):
-
+			expVal = experience.text
+			if expVal == "":
+				expVal = "0"
 			if player.text == 'Player':
 				continue
-
-			csv_writer.writerow([pick.text, team.text, player.text, experience.text])
+			playerName = player.text
+			playerName = playerName.replace("'", "")
+			insert_draftee = create_sql_draftee([playerName, team.text, year, 
+												int(pick.text), int(expVal)])
+			cursor.execute(insert_draftee)
+		mysql.connection.commit()
 
 	return 
 
-def get_individual_rosters(teams=BASE_TEAMS):
-	for team in teams:
-		link_head = 'https://www.basketball-reference.com/teams/'
-		link_end = '/2020.html'
-		link = link_head + team + link_end
-		#print(link)
+def get_individual_rosters(app, mysql, teams=BASE_TEAMS):
+	playerID = 1
+	with app.app_context():
+		cursor = mysql.connection.cursor()
+		for team in teams:
+			link_head = 'https://www.basketball-reference.com/teams/'
+			link_end = '/2020.html'
+			link = link_head + team + link_end
+			#print(link)
 
-		response = requests.get(link)
+			response = requests.get(link)
 
-		soup = BeautifulSoup(response.text, 'html.parser')
+			soup = BeautifulSoup(response.text, 'html.parser')
 
-		players = soup.find_all(attrs={"data-stat": "player"})
-		positions = soup.find_all(attrs={"data-stat": "pos"})
-		years_experience = soup.find_all(attrs={"data-stat": "years_experience"})
+			players = soup.find_all(attrs={"data-stat": "player"})
+			positions = soup.find_all(attrs={"data-stat": "pos"})
+			years_experience = soup.find_all(attrs={"data-stat": "years_experience"})
 
-		folders = 'data/rosters/'
-		filetype = '.csv'
-		filepath = folders+team+filetype
-		with open(filepath, 'w') as csv_file:
-			csv_writer = writer(csv_file)
-			headers = ['Player', 'Position', 'Experience']
-			csv_writer.writerow(headers)
 			for player, position, experience in zip_longest(players, positions, years_experience):
 				if player.text == "Player":
 					continue
-				csv_writer.writerow([player.text, position.text, experience.text])
+				playerName = player.text
+				playerName = playerName.replace("'", "")
+				insert_player = create_sql_player([playerID, playerName, team, position.text, experience.text])
+				cursor.execute(insert_player)
+				playerID += 1
+			mysql.connection.commit()
 	return
 
 

@@ -19,6 +19,7 @@ class NBA_Database(object):
         self.cursor.execute(create_pergame_table)
         self.cursor.execute(create_advanced_table)
         self.cursor.execute(create_per100_table)
+        self.cursor.execute(create_drafts_table)
 
 
 #Create/Structrue mysql db
