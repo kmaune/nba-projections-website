@@ -27,39 +27,39 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container" id="container">
+    <div class="container-fluid" id="container">
         <div id="content-wrap">
             {# application content needs to be provided in the app_content block #}
             {% block app_content %}{% endblock %}
-        </div>
-    </div>
+        </div><!--- END OF CONTENT-WRAP -->
+    </div> <!--- END OF CONTAINER-FLUID --->
     {%- block footer %}
-        <div class="container-fluid footer">
-            <div class = "container">
-                <div class="row align-items-center">
-                    <div class="col-md-2">
-                        <h5 id="contact-head">Contact:</h5>
-                    </div>
+    <div class="container-fluid footer">
+        <div class = "container">
+            <div class="row align-items-center">
+                <div class="col-md-2">
+                    <h5 id="contact-head">Contact:</h5>
+                </div>
 
-                    <div class="col-md-2">
-                        <h5>
-                            <a href="mailto:kpmaune@gmail.com" class="mail">kpmaune@gmail.com</a> <br/>
-                        </h5>
-                    </div>
+                <div class="col-md-2">
+                    <h5>
+                        <a href="mailto:kpmaune@gmail.com" class="mail">kpmaune@gmail.com</a> <br/>
+                    </h5>
+                </div>
 
-                    <div class="col-md-1">
-                        <h5>
-                            <a class="social-link" href="https://www.linkedin.com/in/kyle-maune-ba39b7b0/">LinkedIn</a>
-                        </h5>
-                    </div>
-                    <div class="col-md-1">
-                        <h5>
-                            <a class="social-link" href="https://github.com/kmaune">GitHub</a>
-                        </h5>
-                    </div>
+                <div class="col-md-1">
+                    <h5>
+                        <a class="social-link" href="https://www.linkedin.com/in/kyle-maune-ba39b7b0/">LinkedIn</a>
+                    </h5>
+                </div>
+                <div class="col-md-1">
+                    <h5>
+                        <a class="social-link" href="https://github.com/kmaune">GitHub</a>
+                    </h5>
                 </div>
             </div>
         </div>
+    </div>
     {%- endblock footer %}
 {% endblock %}
 

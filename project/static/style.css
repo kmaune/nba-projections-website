@@ -1,4 +1,17 @@
-h1 { color: coral;}
+* { margin: 0; }
+
+html, body { height: 100% }
+
+#container {
+    min-height: 100%; /* was 100% originally as default */
+    height: auto !important;
+    height: 100%; /* was 100% originally as default (This should probably match the min-height above)*/
+    margin: 0 auto -3em; /* the bottom margin is the negative value of the footer's height */
+    margin-left: 5em;
+    margin-right: 5em;
+}
+
+h1 { color: black; }
 
 .footer {
     height: 3em;
@@ -8,22 +21,11 @@ h1 { color: coral;}
     border-color: #E7E7E7;
     color: #777;
     text-align: center;
-    position: absolute;
-    bottom: 0;
-    width: 100%
+    width: 100%;
 }
 
 .footer a { color: #777; }
 
-#content-wrap {
-    padding-bottom: 3em;
-}
+#content-wrap { padding-bottom: 3em; }
 
-#container {
-    position: relative;
-    min-height=100vh;
-}
-
-#contact-head {
-    text-align: center;
-}
+#contact-head { text-align: center; }
