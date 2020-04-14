@@ -1,7 +1,5 @@
 from flask import render_template, flash, session, request, redirect, url_for, Blueprint
-from IPython import embed
 from project import app, mysql
-from data_scraping.scraper import *
 
 homepage_blueprint = Blueprint('homepage', '__name__', url_prefix='/')
 
