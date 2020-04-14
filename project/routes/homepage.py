@@ -11,4 +11,4 @@ intialized = False
 @homepage_blueprint.route('/', methods=['POST', 'GET'])
 @homepage_blueprint.route('/home', methods=['POST', 'GET'])
 def homepage():
-    return 'Database is setup'
+    return render_template('homepage.html')

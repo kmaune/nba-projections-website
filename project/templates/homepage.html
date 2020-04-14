@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('static', filename='style.css')}}">
+{% endblock %}
+
+{% block app_content %}
+        <h1> Header 1 </h1>
+        <p> ... Insert info about project/functionality. Steps. What to expect, brief bit about original project </p>
+        <button type="button">Start Simulation</button>
+{% endblock %}:
+
+
+
