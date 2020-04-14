@@ -10,6 +10,7 @@ app = Flask(__name__)
 bootstrap = Bootstrap(app)
 
 #Create/Initialize Database structure
+#FIX ME --- This should be uncommented before final commit, commented out to speed up start time of site for development since DB is already setup locally
 #setup_db()
 
 #Configure MySQL
@@ -21,8 +22,9 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 #init MySQL
 mysql = MySQL(app)
-#print(MySQL)
+
 #From project.helper
+#FIX ME --- This should be uncommented before final commit, commented out to speed up start time of site for development since DB is already setup locally
 #initialize(app, mysql);
 
 from project.routes.homepage import homepage_blueprint
