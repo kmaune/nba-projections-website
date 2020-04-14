@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet"
+      href="{{url_for('static', filename='style.css')}}">
+{% endblock %}
+
+{% block app_content %}
+        <h1> Header 3 - About Me</h1>
+        <p> Insert some information about myself, including picture, link to my resume and how to get in touch with me </p>
+{% endblock %}:

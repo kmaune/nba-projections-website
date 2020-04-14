@@ -1,5 +1,4 @@
 from flask import render_template, flash, session, request, redirect, url_for, Blueprint
-from project import app, mysql
 
 homepage_blueprint = Blueprint('homepage', '__name__', url_prefix='/')
 
