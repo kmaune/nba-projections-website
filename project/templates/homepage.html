@@ -10,7 +10,19 @@
         <h1> Header 1 </h1>
         <p> ... Insert info about project/functionality. Steps. What to expect, brief bit about original project </p>
         <button type="button">Start Simulation</button>
+
+        <h3> Data </h3>
+        {{ data | safe }}
+        
 {% endblock %}:
 
 
+{% block scripts %}
+    {{super()}}
+    <script>
+        $(document).ready( function () {
+            $('.pandas').DataTable();
+        } );
+    </script>
+{% endblock %}
 

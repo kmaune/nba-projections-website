@@ -1,6 +1,9 @@
+import pymysql
+import pandas as pd
 from flask import Flask, render_template, flash, session, request, redirect, url_for, Blueprint
 from flask_mysqldb import MySQL
 from flask_bootstrap import Bootstrap
+from sqlalchemy import create_engine 
 from db_setup.setup import *
 from project.helper import *
 
@@ -22,6 +25,9 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 #init MySQL
 mysql = MySQL(app)
+
+sqlEngine = create_engine('mysql+pymysql://root:password@localhost/nba_db')
+dbConnection = sqlEngine.connect()
 
 #From project.helper
 #FIX ME --- This should be uncommented before final commit, commented out to speed up start time of site for development since DB is already setup locally
