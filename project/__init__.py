@@ -37,13 +37,14 @@ from project.routes.homepage import homepage_blueprint
 from project.routes.originalProject import originalProject_blueprint
 from project.routes.aboutMe import aboutMe_blueprint
 from project.routes.start import start_blueprint
+from project.routes.team import team_blueprint
 
 app.register_blueprint(homepage_blueprint)
 app.register_blueprint(originalProject_blueprint)
 app.register_blueprint(aboutMe_blueprint)
 app.register_blueprint(start_blueprint)
+app.register_blueprint(team_blueprint)
 
-#Don't think this ever gets called
 @app.route('/')
 def root():
     return redirect(url_for('/'))

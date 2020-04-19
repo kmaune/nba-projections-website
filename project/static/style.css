@@ -29,3 +29,22 @@ h1 { color: black; }
 #content-wrap { padding-bottom: 3em; }
 
 #contact-head { text-align: center; }
+
+.team-row {
+    text-align: center;
+    font-size: 1.5em;
+}
+
+.team-row a{ 
+    color: black;
+    padding: 0.2em;
+    margin: 0em 0.2em;
+    border: 1px solid;
+    border-color: #E7E7E7;
+}
+
+#make-trade-button-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

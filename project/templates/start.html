@@ -7,9 +7,55 @@
 
 {% block app_content %}
         <h1> NBA Champion Simulator </h1>
-        <h3> Data </h3>
-        {{ data | safe }}
-        
+        <h3> Teams </h3>
+        <div class="row team-row">
+            <tr>
+                <td> <a href={{ url_for('team.team', team_id='ATL') }}>ATL</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='BOS') }}>BOS</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='BRK') }}>BRK</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='CHI') }}>CHI</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='CHO') }}>CHO</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='CLE') }}>CLE</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='DAL') }}>DAL</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='DEN') }}>DEN</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='DET') }}>DET</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='GSW') }}>GSW</a> </td>
+            <tr>
+        </div>
+        <br>
+        <div class="row team-row">
+            <tr>
+                <td> <a href={{ url_for('team.team', team_id='HOU') }}>HOU</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='IND') }}>IND</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='LAC') }}>LAC</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='LAL') }}>LAL</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='MEM') }}>MEM</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='MIA') }}>MIA</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='MIL') }}>MIL</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='MIN') }}>MIN</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='NOP') }}>NOP</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='NYK') }}>NYK</a> </td>
+            <tr>
+        </div>
+        <br>
+        <div class="row team-row">
+            <tr>
+                <td> <a href={{ url_for('team.team', team_id='OKC') }}>OKC</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='ORL') }}>ORL</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='PHI') }}>PHI</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='PHO') }}>PHO</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='POR') }}>POR</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='SAC') }}>SAC</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='SAS') }}>SAS</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='TOR') }}>TOR</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='UTA') }}>UTA</a> </td>
+                <td> <a href={{ url_for('team.team', team_id='WAS') }}>WAS</a> </td>
+            <tr>
+        </div>
+        <br>
+        <div class="row" id="make-trade-button-div">
+            <button type="button" id="make-trade-button"> Make Trade </button> 
+        </div>
 {% endblock %}:
 
 

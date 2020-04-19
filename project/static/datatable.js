@@ -4,7 +4,7 @@ $(document).ready( function () {
         scrollX: true,
         scrollCollapse: true,
         paging: false,
-        fixedColumns: true,
+        fixedColumns: false,
     });
  
     $('.pandas td').each( function() {
