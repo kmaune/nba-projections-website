@@ -2,27 +2,28 @@
 
 {% block styles %}
 {{super()}}
-<link rel="stylesheet"
-      href="{{url_for('static', filename='style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='style.css')}}">
 {% endblock %}
 
 {% block app_content %}
-        <h1> Header 1 </h1>
-        <p> ... Insert info about project/functionality. Steps. What to expect, brief bit about original project </p>
-        <button type="button">Start Simulation</button>
+        <h1> NBA Champion Simulator </h1>
+        <p> The goal of this project is to allow you to utilize machine learning to simulate and project next seasons NBA champion. 
+            It will also allow you to hopefully have some fun by playing around with hypotheticals. You will be able to make trades 
+            and adjust projected statistics to see how they effect the outcome! </p>
 
-        <h3> Data </h3>
-        {{ data | safe }}
-        
-{% endblock %}:
+        <p> After starting the simulation you will first be able to see current rosters for each team, along with their most recent seasons stats. 
+            You will be able to "trade" players to change the rosters however you want. </p>
 
+        <p> From there, the next phase will show players "projected" stats. Which have been generated based on the players past statistics. You will also 
+            have the option to edit these stats. Unfortunately there is no validation currently on the data input, and thus if you enter invalid data to the 
+            projections your simulation will not execute. 
 
-{% block scripts %}
-    {{super()}}
-    <script>
-        $(document).ready( function () {
-            $('.pandas').DataTable();
-        } );
-    </script>
+        <p> After updating the stats you will be able to select some parameters around the machine learning parameters that will be used to "simulate" the season
+            and make an NBA champion prediction! </p>
+
+        <p> The code for this project can be found on GitHub. Feel free to utilize it, or modify it in any way necessary for your own project. If you find any of 
+            the likely many bugs in this project or you would like to contribute to the source code for this site just reach out to me at kpmaune@gmail.com. </p>
+        <form method="POST">
+            <button  type="submit">Start Simulation</button>
+        </form>
 {% endblock %}
-

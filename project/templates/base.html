@@ -1,8 +1,10 @@
 {% extends 'bootstrap/base.html' %}
 
-{% block head %}
+{% block styles %}
     {{super()}}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+    <!--  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css"> -->
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/fixedcolumns/3.3.0/css/fixedColumns.dataTables.min.css">
 {% endblock %}
 
 {% block scripts %}
@@ -12,7 +14,7 @@
 {% endblock %}
 
 {% block title %}
-    Demo Site
+    NBA Champion Simulator
 {% endblock %}
 
 {% block navbar %}
