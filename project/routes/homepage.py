@@ -6,6 +6,5 @@ homepage_blueprint = Blueprint('homepage', '__name__', url_prefix='/')
 @homepage_blueprint.route('/home', methods=['POST', 'GET'])
 def homepage():
     if request.method == 'POST':
-        print("FUCK")
         return redirect(url_for('start.start'))
     return render_template('homepage.html')
